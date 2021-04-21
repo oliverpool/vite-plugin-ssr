@@ -1,11 +1,11 @@
 import './page-files/setup.node'
 import fs from 'fs'
-const { writeFile, mkdir } = fs.promises;
+const { writeFile, mkdir } = fs.promises
 import { join, sep, dirname } from 'path'
 import { getFilesystemRoute, getPageIds, isErrorPage, isStaticRoute, loadPageRoutes, route } from './route.shared'
 import { assert, assertUsage, assertWarning, hasProp, getFileUrl, moduleExists } from './utils'
 import { setSsrEnv } from './ssrEnv.node'
-import { getPageFunctions, prerenderPage } from './renderPage.node'
+import { getPrerenderHook, prerenderPage } from './renderPage.node'
 import { blue, green, gray, cyan } from 'kolorist'
 import { version } from './package.json'
 
@@ -71,7 +71,7 @@ async function prerender({
   > = {}
   await Promise.all(
     allPageIds.map(async (pageId) => {
-      const { prerenderFunction } = await getPageFunctions(pageId)
+      const prerenderFunction = await getPrerenderHook(pageId)
       if (!prerenderFunction) return
       const prerenderSourceFile = prerenderFunction.filePath
       const prerenderResult = await prerenderFunction.prerender()

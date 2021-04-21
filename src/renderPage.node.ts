@@ -24,7 +24,7 @@ import {
 import { prependBaseUrl, removeBaseUrl, startsWithBaseUrl } from './baseUrlHandling'
 
 export { renderPage }
-export { getPageFunctions }
+export { getPrerenderHook }
 export { prerenderPage }
 
 async function renderPage({
@@ -338,10 +338,10 @@ type PageFunctions = {
     filePath: string
     render: (arg1: { Page: unknown; contextProps: Record<string, unknown> }) => unknown
   }
-  addContextPropsFunction?: {
+  addContextPropsFunctions: {
     filePath: string
     addContextProps: (arg1: { Page: unknown; contextProps: Record<string, unknown> }) => unknown
-  }
+  }[]
   prerenderFunction?: {
     filePath: string
     prerender: () => unknown
@@ -349,11 +349,20 @@ type PageFunctions = {
   passToClient: string[]
 }
 async function getPageFunctions(pageId: string): Promise<PageFunctions> {
-  const serverFiles = await getServerFiles(pageId)
+  const pageServerFiles = await getPageFiles('.page.server')
+  assertUsage(
+    pageServerFiles.length > 0,
+    'No *.page.server.* file found. Make sure to create one. You can create a `_default.page.server.js` which will apply as default to all your pages.'
+  )
+  const pageViewFiles = await getPageFiles('.page')
+  const serverFiles = filterAndSort([...pageServerFiles, ...pageViewFiles], pageId)
+  assertContextPropsFunctionsSegregation(serverFiles, pageId)
 
   let renderFunction
-  let addContextPropsFunction
   let prerenderFunction
+  // let renderFunction: PageFunctions['renderFunction']
+  // let prerenderFunction: PageFunctions['prerenderFunction']
+  const addContextPropsFunctions = []
   const passToClient: string[] = []
 
   for (const { filePath, loadFile } of serverFiles) {
@@ -365,6 +374,14 @@ async function getPageFunctions(pageId: string): Promise<PageFunctions> {
         filePath +
         '`.)'
     )
+    ;['render', 'prerender', 'passToClient'].forEach((hookName) => {
+      const pageFileType = getPageFileType(filePath)
+      assert(pageFileType === '.page.server.js' || pageFileType === '.page.js')
+      assertUsage(
+        !(hookName in fileExports && pageFileType !== '.page.server.js'),
+        `Your ${filePath} has a \`export { ${hookName} }\` but only \`.page.server.js\` files are allowed to.`
+      )
+    })
 
     const render = fileExports.render || fileExports.default?.render
     assertUsage(!render || isCallable(render), `The \`render()\` hook defined in ${filePath} should be a function.`)
@@ -394,10 +411,10 @@ async function getPageFunctions(pageId: string): Promise<PageFunctions> {
       renderFunction = renderFunction || { render, filePath }
     }
     if (addContextProps) {
-      addContextPropsFunction = addContextPropsFunction || {
+      addContextPropsFunctions.push({
         addContextProps,
         filePath
-      }
+      })
     }
     if (prerender) {
       prerenderFunction = prerenderFunction || { prerender, filePath }
@@ -406,15 +423,54 @@ async function getPageFunctions(pageId: string): Promise<PageFunctions> {
 
   assertUsage(
     renderFunction,
-    'No `render` function found. Make sure to define a `*.page.server.js` file that exports a `render` function. You can export a `render` function in a file `_default.page.server.js` which will apply as default to all your pages.'
+    `No \`render()\` hook found for Page \`${pageId}.page\`. Make sure to \`export { render }\` in \`${pageId}.page.server.js\` or \`_default.page.server.js\``
   )
 
   return {
     renderFunction,
-    addContextPropsFunction,
+    addContextPropsFunctions,
     passToClient,
     prerenderFunction
   }
+}
+
+async function getPrerenderHook(pageId: string) {
+  const { prerenderFunction } = await getPageFunctions(pageId)
+  return prerenderFunction
+}
+
+async function getDefaultAddContextProps() {}
+
+function assertContextPropsFunctionsSegregation(
+  serverFiles: {filePath: string}[],
+  pageId: string
+) {
+  let areServerSide: null | boolean = null
+  let filePathLast: string
+  serverFiles
+  .filter(({filePath}) => getPageFileType(filePath)==='.page.server.js')
+  .forEach(({ filePath }) => {
+    const isServerSide = getPageFileType(filePath) === '.page.server.js'
+    assertUsage(
+      areServerSide === null || areServerSide === isServerSide,
+      `The \`addContextProps()\` hooks for the Page \`${pageId}.page\` should be be defined either all in \`.page.js\` files or all in \`.page.server.js\` files. But one \`addContextProps()\` hook is defined in \`${filePath}\` while another one is defined in \`${filePathLast}\`. Open a GitHub ticket if you want an explanation for this rule.`
+    )
+    areServerSide = isServerSide
+    filePathLast = filePath
+  })
+}
+
+function getPageFileType(filePath: string): '.page.js' | '.page.server.js' | '.page.client.js' | '.page.route.js' {
+  assert(filePath.includes('.page.') && filePath.split('.page.').length === 2)
+  if (filePath.includes('.page.server.')) return '.page.server.js'
+  if (filePath.includes('.page.client.')) return '.page.client.js'
+  if (filePath.includes('.page.route.')) return '.page.route.js'
+  return '.page.js'
+}
+
+function isDefaultPageFile(filePath: string): boolean {
+  assert(!filePath.includes('\\'))
+  return filePath.includes('/_default')
 }
 
 async function getBrowserFilePath(pageId: string) {
@@ -423,6 +479,7 @@ async function getBrowserFilePath(pageId: string) {
   const browserFilePath = browserFile.filePath
   return browserFilePath
 }
+
 async function getBrowserFiles(pageId: string) {
   let browserFiles = await getPageFiles('.page.client')
   assertUsage(
@@ -433,16 +490,6 @@ async function getBrowserFiles(pageId: string) {
   return browserFiles
 }
 
-async function getServerFiles(pageId: string) {
-  let serverFiles = await getPageFiles('.page.server')
-  assertUsage(
-    serverFiles.length > 0,
-    'No *.page.server.* file found. Make sure to create one. You can create a `_default.page.server.js` which will apply as default to all your pages.'
-  )
-  serverFiles = filterAndSort(serverFiles, pageId)
-  return serverFiles
-}
-
 function filterAndSort<T extends { filePath: string }>(pageFiles: T[], pageId: string): T[] {
   pageFiles = pageFiles.filter(({ filePath }) => {
     assert(filePath.startsWith('/'))
@@ -450,6 +497,12 @@ function filterAndSort<T extends { filePath: string }>(pageFiles: T[], pageId: s
     return filePath.startsWith(pageId) || filePath.includes('/_default')
   })
 
+  sortPageFiles(pageFiles, pageId)
+
+  return pageFiles
+}
+
+function sortPageFiles<T extends { filePath: string }>(pageFiles: T[], pageId: string) {
   // Sort `_default.page.server.js` files by filesystem proximity to pageId's `*.page.js` file
   pageFiles.sort(
     lowerFirst(({ filePath }) => {
@@ -460,8 +513,6 @@ function filterAndSort<T extends { filePath: string }>(pageFiles: T[], pageId: s
       return changeDirCount
     })
   )
-
-  return pageFiles
 }
 
 async function applyViteHtmlTransform(htmlDocument: string, url: string): Promise<string> {
