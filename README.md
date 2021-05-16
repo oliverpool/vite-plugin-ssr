@@ -46,9 +46,10 @@ Simple, full-fledged, do-one-thing-do-it-well.
 <br/> &nbsp;&nbsp; [Page Redirection](#page-redirection)
 <br/> &nbsp;&nbsp; [Base URL](#base-url)
 <br/><sub>&nbsp;&nbsp;&nbsp; Integrations</sub>
-<br/> &nbsp;&nbsp; [Authentication](#authentication)
+<br/> &nbsp;&nbsp; [Authentication](#authentication) (Auth0, Passport.js, Grant, ...)
 <br/> &nbsp;&nbsp; [Markdown](#markdown)
 <br/> &nbsp;&nbsp; [Store](#store) (Vuex, Redux, ...)
+<br/> &nbsp;&nbsp; [GraphQL & RPC](#graphql--rpc) (Apollo, Relay, Wildcard API, ...)
 <br/> &nbsp;&nbsp; [Tailwind CSS](#tailwind-css)
 <br/><sub>&nbsp;&nbsp;&nbsp; Deploy</sub>
 <br/> &nbsp;&nbsp; [Static Hosts](#static-hosts) (Cloudflare Pages, Netlify, GitHub Pages, ...)
