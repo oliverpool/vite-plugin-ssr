@@ -800,6 +800,35 @@ You can then set `isActive = href===urlPathname` in your link component.
 <br/><br/>
 
 
+### Pre-rendering
+
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+> :asterisk: **What is pre-rendering?**
+> Pre-rendering means to *pre*-generate the HTML of *all* your pages *at once*:
+> normally the HTML of a page is generated at request-time
+> (when your user navigates to that page), but
+> with pre-rendering the HTML of a page is generated at build-time instead
+> (when yun run `$ vite-plugin-ssr prerender`).
+> Your app then consists only of static files (HTML, JS, CSS, images, ...)
+> that you can deploy to so-called "static hosts" such as [GitHub Pages](https://pages.github.com/), [Cloudflare Pages](https://pages.cloudflare.com/), or [Netlify](https://www.netlify.com/).
+> If you don't use pre-rendering, then you need to use a Node.js server to be able to render your pages' HTML at request-time.
+
+To pre-render your pages, use the [CLI command `prerender`](#command-prerender) at the end of your build:
+ - With npm: run `$ npx vite build && npx vite build --ssr && npx vite-plugin-ssr prerender`.
+ - With Yarn: `$ yarn vite build && yarn vite build --ssr && yarn vite-plugin-ssr prerender`.
+
+For pages with a parameterized route (e.g. `/movie/:movieId`), you have to use the [`prerender()` hook](#export--prerender-).
+
+The `prerender()` hook can also be used to accelerate the pre-rendering process as it allows you to prefetch data for multiple pages at once.
+
+Examples:
+ - [/examples/vue/](examples/vue/)
+ - [/examples/react/](examples/react/)
+
+<br/><br/>
+
+
 ### SPA vs SSR vs HTML
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
@@ -849,63 +878,6 @@ To render a page to HTML-only, define an empty `.page.client.js`:
 import './path/to/some.css'
 ```
 
-<br/><br/>
-
-
-### Pre-rendering
-
-> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
-
-> :asterisk: **What is pre-rendering?**
-> Pre-rendering means to *pre*-generate the HTML of *all* your pages *at once*:
-> normally the HTML of a page is generated at request-time
-> (when your user navigates to that page), but
-> with pre-rendering the HTML of a page is generated at build-time instead
-> (when yun run `$ vite-plugin-ssr prerender`).
-> Your app then consists only of static files (HTML, JS, CSS, images, ...)
-> that you can deploy to so-called "static hosts" such as [GitHub Pages](https://pages.github.com/), [Cloudflare Pages](https://pages.cloudflare.com/), or [Netlify](https://www.netlify.com/).
-> If you don't use pre-rendering, then you need to use a Node.js server to be able to render your pages' HTML at request-time.
-
-To pre-render your pages, use the [CLI command `prerender`](#command-prerender) at the end of your build:
- - With npm: run `$ npx vite build && npx vite build --ssr && npx vite-plugin-ssr prerender`.
- - With Yarn: `$ yarn vite build && yarn vite build --ssr && yarn vite-plugin-ssr prerender`.
-
-For pages with a parameterized route (e.g. `/movie/:movieId`), you have to use the [`prerender()` hook](#export--prerender-).
-
-The `prerender()` hook can also be used to accelerate the pre-rendering process as it allows you to prefetch data for multiple pages at once.
-
-Examples:
- - [/examples/vue/](examples/vue/)
- - [/examples/react/](examples/react/)
-
-<br/><br/>
-
-
-### Authentication
-
-> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
-
-Information about the authenticated user can be added to the `contextProps` at the server integration point
-[`createPageRender()`](#import--createpagerender--from-vite-plugin-ssr).
-The `contextProps` are available to all hooks and Route Functions.
-
-```js
-const renderPage = createPageRender(/*...*/)
-
-app.get('*', async (req, res, next) => {
-  const url = req.originalUrl
-  // Express.js authentication middlewares provide the logged-in user information
-  // on the `req` object, e.g. `req.user` when using Passport.js.
-  const user = req.user
-  /* Or when using a third-party authentication provider:
-  const user = await authProviderApi.getUser(req.headers)
-  */
-  const contextProps = { user }
-  const result = await renderPage({ url, contextProps })
-  if (result.nothingRendered) return next()
-  res.status(result.statusCode).send(result.renderResult)
-})
-```
 <br/><br/>
 
 
@@ -1050,41 +1022,6 @@ the solution using `contextProps.docHtml` is considerably simpler and works for 
 <br/><br/>
 
 
-### Markdown
-
-> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
-
-You can use `vite-plugin-ssr` with any Vite markdown plugin.
-
-For Vue you can use [`vite-plugin-md`](https://github.com/antfu/vite-plugin-md).
-Example:
- - [/examples/vue/vite.config.ts](examples/vue/vite.config.ts)
- - [/examples/vue/pages/markdown.page.md](examples/vue/pages/markdown.page.md)
-
-For React you can use [`vite-plugin-mdx`](https://github.com/brillout/vite-plugin-mdx).
-Example:
- - [/examples/react/vite.config.ts](examples/react/vite.config.ts)
- - [/examples/react/pages/markdown.page.md](examples/react/pages/markdown.page.md)
-
-<br/><br/>
-
-
-### Store
-
-> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
-
-With `vite-plugin-ssr`, you have full control over rendering which means that integrating a global store is mostly a matter of following the official SSR guide of the tool you are using ([Redux - SSR Guide](https://redux.js.org/recipes/server-rendering), [Vuex SSR](https://ssr.vuejs.org/guide/data.html#data-store)).
-
-While you can follow the official guides *exactly* as-is (including serializing initial state into HTML),
-you can also leverage `vite-plugin-ssr`'s `export { passToClient }` to make your life slightly easier,
-as shown in the following examples.
-
- - [/examples/vuex/](examples/vuex/)
- - [/examples/redux/](examples/redux/)
-
-<br/><br/>
-
-
 ### Page Redirection
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
@@ -1178,6 +1115,101 @@ useClientRouter({
 <br/><br/>
 
 
+### Base URL
+
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+The Base URL (aka Public Base Path) is about changing the URL root of your Vite app.
+For example, instead of deploying your Vite app at `https://example.org` (i.e. `base: '/'`), you can set `base: '/some/nested/path/'` and deploy your Vite app at `https://example.org/some/nested/path/`.
+
+Change Base URL for production:
+1. Use Vite's [`--base` CLI build option](https://vitejs.dev/guide/build.html#public-base-path): `$ vite build --base=/some/nested/path/ && vite build --ssr --base=/some/nested/path/`. (For both `$ vite build` *and* `$ vite build --ssr`.)
+2. If you don't pre-render your app: pass `base` to `createPageRender({ base: isProduction ? '/some/nested/path/' : '/' })`. (Pre-rendering automatically sets the right Base URL.)
+3. Use the `import.meta.env.BASE_URL` value [injected by Vite](https://vitejs.dev/guide/build.html#public-base-path) to construct a `<Link href="/star-wars">` component that prepends the Base URL.
+
+Change Base URL for local dev:
+1. Pass `base` to `createServer({ base: '/some/nested/path/' })` (`import { createServer } from 'vite'`) and `createPageRender({ base: '/some/nested/path/' })` (`import { createPageRender } from 'vite-plugin-ssr'`).
+
+You can also set `base: 'https://another-origin.example.org/'` (for cross-origin deployments) and `base: './'` (for embedded deployments at multiple paths).
+
+Example:
+ - [/examples/base-url/pages/_components/Link.jsx](examples/base-url/pages/_components/Link.jsx) (a `<Link>` component built on top of `import.meta.env.BASE_URL`)
+ - [/examples/base-url/server/index.js](examples/base-url/server/index.js) (see the `base` option passed to `vite` and `vite-plugin-ssr`)
+ - [/examples/base-url/package.json](examples/base-url/package.json) (see the build scripts)
+
+<br/><br/>
+
+
+### Authentication
+
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+Information about the authenticated user can be added to the `contextProps` at the server integration point
+[`createPageRender()`](#import--createpagerender--from-vite-plugin-ssr).
+The `contextProps` are available to all hooks and Route Functions.
+
+```js
+const renderPage = createPageRender(/*...*/)
+
+app.get('*', async (req, res, next) => {
+  const url = req.originalUrl
+  // Express.js authentication middlewares provide the logged-in user information
+  // on the `req` object, e.g. `req.user` when using Passport.js.
+  const user = req.user
+  /* Or when using a third-party authentication provider:
+  const user = await authProviderApi.getUser(req.headers)
+  */
+  const contextProps = { user }
+  const result = await renderPage({ url, contextProps })
+  if (result.nothingRendered) return next()
+  res.status(result.statusCode).send(result.renderResult)
+})
+```
+<br/><br/>
+
+
+### Markdown
+
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+You can use `vite-plugin-ssr` with any Vite markdown plugin.
+
+For Vue you can use [`vite-plugin-md`](https://github.com/antfu/vite-plugin-md).
+Example:
+ - [/examples/vue/vite.config.ts](examples/vue/vite.config.ts)
+ - [/examples/vue/pages/markdown.page.md](examples/vue/pages/markdown.page.md)
+
+For React you can use [`vite-plugin-mdx`](https://github.com/brillout/vite-plugin-mdx).
+Example:
+ - [/examples/react/vite.config.ts](examples/react/vite.config.ts)
+ - [/examples/react/pages/markdown.page.md](examples/react/pages/markdown.page.md)
+
+<br/><br/>
+
+
+### Store
+
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+With `vite-plugin-ssr`, you have full control over rendering which means that integrating a global store is mostly a matter of following the official SSR guide of the tool you are using ([Redux - SSR Guide](https://redux.js.org/recipes/server-rendering), [Vuex SSR](https://ssr.vuejs.org/guide/data.html#data-store)).
+
+While you can follow the official guides *exactly* as-is (including serializing initial state into HTML),
+you can also leverage `vite-plugin-ssr`'s `export { passToClient }` to make your life slightly easier,
+as shown in the following examples.
+
+ - [/examples/vuex/](examples/vuex/)
+ - [/examples/redux/](examples/redux/)
+
+<br/><br/>
+
+
+### GraphQL & RPC
+
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+<br/><br/>
+
+
 ### Tailwind CSS
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
@@ -1221,27 +1253,16 @@ That's it.
 <br/><br/>
 
 
-### Base URL
+### Static Hosts
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
 
-The Base URL (aka Public Base Path) is about changing the URL root of your Vite app.
-For example, instead of deploying your Vite app at `https://example.org` (i.e. `base: '/'`), you can set `base: '/some/nested/path/'` and deploy your Vite app at `https://example.org/some/nested/path/`.
+<br/><br/>
 
-Change Base URL for production:
-1. Use Vite's [`--base` CLI build option](https://vitejs.dev/guide/build.html#public-base-path): `$ vite build --base=/some/nested/path/ && vite build --ssr --base=/some/nested/path/`. (For both `$ vite build` *and* `$ vite build --ssr`.)
-2. If you don't pre-render your app: pass `base` to `createPageRender({ base: isProduction ? '/some/nested/path/' : '/' })`. (Pre-rendering automatically sets the right Base URL.)
-3. Use the `import.meta.env.BASE_URL` value [injected by Vite](https://vitejs.dev/guide/build.html#public-base-path) to construct a `<Link href="/star-wars">` component that prepends the Base URL.
 
-Change Base URL for local dev:
-1. Pass `base` to `createServer({ base: '/some/nested/path/' })` (`import { createServer } from 'vite'`) and `createPageRender({ base: '/some/nested/path/' })` (`import { createPageRender } from 'vite-plugin-ssr'`).
+### AWS Lambda
 
-You can also set `base: 'https://another-origin.example.org/'` (for cross-origin deployments) and `base: './'` (for embedded deployments at multiple paths).
-
-Example:
- - [/examples/base-url/pages/_components/Link.jsx](examples/base-url/pages/_components/Link.jsx) (a `<Link>` component built on top of `import.meta.env.BASE_URL`)
- - [/examples/base-url/server/index.js](examples/base-url/server/index.js) (see the `base` option passed to `vite` and `vite-plugin-ssr`)
- - [/examples/base-url/package.json](examples/base-url/package.json) (see the build scripts)
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
 
 <br/><br/>
 
@@ -1254,6 +1275,13 @@ Make sure to import `/dist/server/importer.js` in your worker code. (The `import
 
 Example:
  - [/examples/cloudflare-workers](examples/cloudflare-workers)
+
+<br/><br/>
+
+
+### Firebase
+
+> :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
 
 <br/><br/>
 
