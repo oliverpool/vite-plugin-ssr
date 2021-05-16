@@ -1144,27 +1144,36 @@ Example:
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
 
-Information about the authenticated user can be added to the `contextProps` at the server integration point
+Add information about the authenticated user to `contextProps` at the server integration point
 [`createPageRender()`](#import--createpagerender--from-vite-plugin-ssr).
-The `contextProps` are available to all hooks and Route Functions.
 
 ```js
 const renderPage = createPageRender(/*...*/)
 
 app.get('*', async (req, res, next) => {
   const url = req.originalUrl
-  // Express.js authentication middlewares provide the logged-in user information
-  // on the `req` object, e.g. `req.user` when using Passport.js.
+
+  // Express.js authentication middlewares (e.g. Passport.js or Grant) provide
+  // information about the logged-in user on the `req` object, e.g. `req.user`:
   const user = req.user
-  /* Or when using a third-party authentication provider:
+
+  /* Or when using a third-party authentication provider (e.g. Auth0):
   const user = await authProviderApi.getUser(req.headers)
   */
+
+  // We add information about the authenticated user to the `contextProps`
   const contextProps = { user }
   const result = await renderPage({ url, contextProps })
+
   if (result.nothingRendered) return next()
   res.status(result.statusCode).send(result.renderResult)
 })
 ```
+
+ - https://github.com/simov/grant
+ - https://github.com/jaredhanson/passport
+ - https://auth0.com/
+
 <br/><br/>
 
 
@@ -1191,10 +1200,14 @@ Example:
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
 
-With `vite-plugin-ssr`, you have full control over rendering which means that integrating a global store is mostly a matter of following the official SSR guide of the tool you are using ([Redux - SSR Guide](https://redux.js.org/recipes/server-rendering), [Vuex SSR](https://ssr.vuejs.org/guide/data.html#data-store)).
+With `vite-plugin-ssr`, you have full control over rendering, which means that integrating tools is simply a matter of following the official SSR guide of the tool you are using.
 
-While you can follow the official guides *exactly* as-is (including serializing initial state into HTML),
-you can also leverage `vite-plugin-ssr`'s `export { passToClient }` to make your life slightly easier,
+- [Vuex SSR](https://ssr.vuejs.org/guide/data.html#data-store)
+- [PullState SSR](https://lostpebble.github.io/pullstate/docs/quick-example-server-rendered)
+- [Redux SSR](https://redux.js.org/recipes/server-rendering)
+
+While you can follow the official guides *exactly* as-is and serialize the initial state into HTML,
+you can leverage `vite-plugin-ssr`'s `export { passToClient }` instead to make your life slightly easier,
 as shown in the following examples.
 
  - [/examples/vuex/](examples/vuex/)
@@ -1206,6 +1219,21 @@ as shown in the following examples.
 ### GraphQL & RPC
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+With `vite-plugin-ssr`, you have full control over rendering, which means that integrating tools is simply a matter of following the official SSR guide of the tool you are using.
+
+RPC:
+ - [Wildcard API - SSR](https://github.com/brillout/wildcard-api#ssr)
+
+GraphQL:
+ - [Apollo GraphQL - Server-side rendering](https://www.apollographql.com/docs/react/performance/server-side-rendering/)
+ - [Relay - SSR docs #3468](https://github.com/facebook/relay/issues/3468#issuecomment-824872147)
+
+While you can follow the official guides *exactly* as-is and serialize the initial fetched data into HTML,
+you can leverage `vite-plugin-ssr`'s `export { passToClient }` instead to make your life slightly easier,
+as shown in the following example.
+
+ - [/examples/graphql-apollo/](examples/graphql-apollo/)
 
 <br/><br/>
 
@@ -1255,6 +1283,8 @@ That's it.
 
 ### Static Hosts
 
+To deploy your app to a static host, make sure to [pre-render](#pre-rendering) your pages.
+
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
 
 <br/><br/>
@@ -1282,6 +1312,11 @@ Example:
 ### Firebase
 
 > :warning: We recommend reading the [Vue Tour](#vue-tour) or [React Tour](#react-tour) before proceeding with guides.
+
+From an architectural point of view, `vite-plugin-ssr` is simply an Express.js (or Fastify, Koa, ...) middleware.
+
+This means that 
+From Firebase's perspective, your app is simply a Node.js server
 
 <br/><br/>
 
