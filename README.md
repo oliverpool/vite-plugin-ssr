@@ -52,7 +52,7 @@ Simple, full-fledged, do-one-thing-do-it-well.
 <br/> &nbsp;&nbsp; [GraphQL & RPC](#graphql--rpc) (Apollo, Relay, Wildcard API, ...)
 <br/> &nbsp;&nbsp; [Tailwind CSS](#tailwind-css)
 <br/><sub>&nbsp;&nbsp;&nbsp; Deploy</sub>
-<br/> &nbsp;&nbsp; [Static Hosts](#static-hosts) (Cloudflare Pages, Netlify, GitHub Pages, ...)
+<br/> &nbsp;&nbsp; [Static Hosts](#static-hosts) (Netlify, GitHub Pages, Cloudflare Pages, ...)
 <br/> &nbsp;&nbsp; [AWS Lambda](#aws-lambda)
 <br/> &nbsp;&nbsp; [Cloudflare Workers](#cloudflare-workers)
 <br/> &nbsp;&nbsp; [Firebase](#firebase)
@@ -99,7 +99,7 @@ Simple, full-fledged, do-one-thing-do-it-well.
 - **Do-One-Thing-Do-It-Well**. Only takes care of SSR, and works with: other Vite plugins, any view framework (Vue, React, ...), and any server environment (Express, Fastify, Cloudflare Workers, Firebase, ...).
 - **Render Control**. You control how your pages are rendered enabling you to easily and naturally integrate tools (Vuex, Redux, Apollo GraphQL, Service Workers, ...).
 - **SPA & SSR & HTML**. Render some pages as SPA, some with SSR, and some to HTML-only (with zero/minimal browser-side JavaScript).
-- **Pre-render / SSG / Static Websites**. Deploy your app to a static host (GitHub Pages, Netlify, Cloudflare Pages, ...) by pre-rendering your pages.
+- **Pre-render / SSG / Static Websites**. Deploy your app to a static host (Netlify, GitHub Pages, Cloudflare Pages, ...) by pre-rendering your pages.
 - **Routing**. You can choose between Server-side Routing (for a simple architecture) and Client-side Routing (for faster/animated page transitions). You can also use Vue Router and React Router.
 - **HMR**. Browser as well as server code is automatically reloaded.
 - **Fast Cold Start**. [Node.js] Your pages are lazy-loaded; adding pages doesn't increase the cold start of your serverless functions.
