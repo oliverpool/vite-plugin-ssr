@@ -40,8 +40,8 @@ Simple, full-fledged, do-one-thing-do-it-well.
 <br/> &nbsp;&nbsp; [Data Fetching](#data-fetching)
 <br/> &nbsp;&nbsp; [Routing](#routing)
 <br/> &nbsp;&nbsp; [Pre-rendering](#pre-rendering) (SSG)
-<br/> &nbsp;&nbsp; [SPA vs SSR vs HTML](#spa-vs-ssr-vs-html)
 <br/><sub>&nbsp;&nbsp;&nbsp; More</sub>
+<br/> &nbsp;&nbsp; [SPA vs SSR vs HTML](#spa-vs-ssr-vs-html)
 <br/> &nbsp;&nbsp; [Composable HTML `<head>`](#html-head)
 <br/> &nbsp;&nbsp; [Page Redirection](#page-redirection)
 <br/> &nbsp;&nbsp; [Base URL](#base-url)
