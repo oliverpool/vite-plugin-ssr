@@ -36,18 +36,25 @@ Simple, full-fledged, do-one-thing-do-it-well.
 <br/> &nbsp;&nbsp; [Manual Installation](#manual-installation)
 <br/>
 <br/> **Guides**
+<br/><sub>&nbsp;&nbsp;&nbsp; Basics</sub>
 <br/> &nbsp;&nbsp; [Data Fetching](#data-fetching)
 <br/> &nbsp;&nbsp; [Routing](#routing)
-<br/> &nbsp;&nbsp; [SPA vs SSR vs HTML](#spa-vs-ssr-vs-html)
 <br/> &nbsp;&nbsp; [Pre-rendering](#pre-rendering) (SSG)
-<br/> &nbsp;&nbsp; [Authentication](#authentication)
-<br/> &nbsp;&nbsp; [HTML `<head>`](#html-head)
-<br/> &nbsp;&nbsp; [Markdown](#markdown)
-<br/> &nbsp;&nbsp; [Store](#store) (Vuex/Redux/...)
+<br/> &nbsp;&nbsp; [SPA vs SSR vs HTML](#spa-vs-ssr-vs-html)
+<br/><sub>&nbsp;&nbsp;&nbsp; Advanced</sub>
+<br/> &nbsp;&nbsp; [Composable HTML `<head>`](#html-head)
 <br/> &nbsp;&nbsp; [Page Redirection](#page-redirection)
-<br/> &nbsp;&nbsp; [Tailwind CSS](#tailwind-css)
 <br/> &nbsp;&nbsp; [Base URL](#base-url)
+<br/><sub>&nbsp;&nbsp;&nbsp; Integration</sub>
+<br/> &nbsp;&nbsp; [Authentication](#authentication)
+<br/> &nbsp;&nbsp; [Markdown](#markdown)
+<br/> &nbsp;&nbsp; [Store](#store) (Vuex, Redux, ...)
+<br/> &nbsp;&nbsp; [Tailwind CSS](#tailwind-css)
+<br/><sub>&nbsp;&nbsp;&nbsp; Deploy</sub>
+<br/> &nbsp;&nbsp; [Static Hosts](#static-hosts) (Cloudflare Pages, Netlify, GitHub Pages, ...)
+<br/> &nbsp;&nbsp; [AWS Lambda](#aws-lambda)
 <br/> &nbsp;&nbsp; [Cloudflare Workers](#cloudflare-workers)
+<br/> &nbsp;&nbsp; [Firebase](#firebase)
 <br/>
 <br/> **API**
 <br/><sub>&nbsp;&nbsp;&nbsp; Node.js & Browser</sub>
