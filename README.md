@@ -26,16 +26,16 @@ Simple, full-fledged, do-one-thing-do-it-well.
 
 <br/>
 
-<br/> Overview
+<br/> **Overview**
 <br/> &nbsp;&nbsp; [Introduction](#introduction)
 <br/> &nbsp;&nbsp; [Vue Tour](#vue-tour)
 <br/> &nbsp;&nbsp; [React Tour](#react-tour)
 <br/>
-<br/> Get Started
+<br/> **Get Started**
 <br/> &nbsp;&nbsp; [Boilerplates](#boilerplates)
 <br/> &nbsp;&nbsp; [Manual Installation](#manual-installation)
 <br/>
-<br/> Guides
+<br/> **Guides**
 <br/> &nbsp;&nbsp; [Data Fetching](#data-fetching)
 <br/> &nbsp;&nbsp; [Routing](#routing)
 <br/> &nbsp;&nbsp; [SPA vs SSR vs HTML](#spa-vs-ssr-vs-html)
@@ -49,7 +49,7 @@ Simple, full-fledged, do-one-thing-do-it-well.
 <br/> &nbsp;&nbsp; [Base URL](#base-url)
 <br/> &nbsp;&nbsp; [Cloudflare Workers](#cloudflare-workers)
 <br/>
-<br/> API
+<br/> **API**
 <br/><sub>&nbsp;&nbsp;&nbsp; Node.js & Browser</sub>
 <br/> &nbsp;&nbsp; [`*.page.js`](#pagejs)
 <br/> &nbsp;&nbsp; [`contextProps`](#contextprops)
