@@ -45,7 +45,7 @@ Simple, full-fledged, do-one-thing-do-it-well.
 <br/> &nbsp;&nbsp; [Composable HTML `<head>`](#html-head)
 <br/> &nbsp;&nbsp; [Page Redirection](#page-redirection)
 <br/> &nbsp;&nbsp; [Base URL](#base-url)
-<br/><sub>&nbsp;&nbsp;&nbsp; Integration</sub>
+<br/><sub>&nbsp;&nbsp;&nbsp; Integrations</sub>
 <br/> &nbsp;&nbsp; [Authentication](#authentication)
 <br/> &nbsp;&nbsp; [Markdown](#markdown)
 <br/> &nbsp;&nbsp; [Store](#store) (Vuex, Redux, ...)
@@ -95,7 +95,7 @@ Simple, full-fledged, do-one-thing-do-it-well.
 
 `vite-plugin-ssr` provides a similar experience than Nuxt/Next.js, but with Vite's wonderful DX, and as a do-one-thing-do-it-well tool.
 
-- **Do-One-Thing-Do-It-Well**. Takes care only of SSR and works with: other Vite plugins, any view framework (Vue, React, ...), and any server environment (Express, Fastify, Cloudflare Workers, ...).
+- **Do-One-Thing-Do-It-Well**. Only takes care of SSR, and works with: other Vite plugins, any view framework (Vue, React, ...), and any server environment (Express, Fastify, Cloudflare Workers, Firebase, ...).
 - **Render Control**. You control how your pages are rendered enabling you to easily and naturally integrate tools (Vuex, Redux, Apollo GraphQL, Service Workers, ...).
 - **SPA & SSR & HTML**. Render some pages as SPA, some with SSR, and some to HTML-only (with zero/minimal browser-side JavaScript).
 - **Pre-render / SSG / Static Websites**. Deploy your app to a static host (GitHub Pages, Netlify, Cloudflare Pages, ...) by pre-rendering your pages.
@@ -104,7 +104,7 @@ Simple, full-fledged, do-one-thing-do-it-well.
 - **Fast Cold Start**. [Node.js] Your pages are lazy-loaded; adding pages doesn't increase the cold start of your serverless functions.
 - **Code Splitting**. [Browser] Each page loads only the code it needs.
 - **Simple Design**. Simple overall design resulting in a tool that is small, robust, and easy to use.
-- **Scalable**. Your source code can scale to thousands of files with no hit on dev speed (thanks to Vite's lazy transpiling), and `vite-plugin-ssr`'s SSR architecture scales from small hobby projects to large-scale enterprise projects with precise SSR needs.
+- **Scalable**. Your source code can scale to thousands of files with no hit on dev speed (thanks to Vite's lazy transpiling), and with `vite-plugin-ssr` you get an SSR architecture that scales from small hobby projects with simple needs to large-scale enterprise projects with highly custom SSR needs.
 - **No Known Bug**. The source code of `vite-plugin-ssr` has no known bug; any bug you may encounter will be quickly fixed.
 - **Responsive**. Made with :heart:; GitHub issues are welcome and answered; conversations are welcome at [Discord - `vite-plugin-ssr`](https://discord.gg/qTq92FQzKb).
 
