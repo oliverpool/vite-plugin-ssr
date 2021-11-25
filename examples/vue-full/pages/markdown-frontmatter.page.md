@@ -1,0 +1,8 @@
+---
+title: A Markdown Page
+description: Example of setting `<title>` and `<meta name="description">`
+---
+
+# Markdown
+
+This page is written in _Markdown_.

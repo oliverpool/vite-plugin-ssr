@@ -6,6 +6,7 @@
       </a>
       <Link href="/">Welcome</Link>
       <Link href="/markdown">Markdown</Link>
+      <Link href="/markdown-frontmatter">Markdown (Frontmatter)</Link>
       <Link href="/star-wars">Data Fetching</Link>
       <Link href="/hello/alice">Routing</Link>
     </div>
